@@ -29,3 +29,16 @@ build:
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
 
+# Deployment to DigitalOcean
+deploy:
+    steps:
+      - npm-install
+      - script:
+        name: install supervisor
+        code: npm install -g supervisor
+      - internal/docker-push:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+        repository: bluesnake/werckersimpleapp
+        ports: "8080"
+        cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/app.js”
