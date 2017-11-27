@@ -32,7 +32,7 @@ wercker dev --expose-ports
 The `dev` target inside `wercker.yml` uses the `internal/watch` step to dynamically reload the runtime container when sourcefile changes are detected, which allows you to quickly test changes without having to kill/rebuild/relaunch the container. For instance, add another city to the array on `app.js:3' like so:
 
 ```
-var cities = {"cities":["Bratislava","Amsterdam","Berlin","New York","San Francisco","Tokyo","London"]}
+var cities = {"cities":["Amsterdam","Berlin","New York","San Francisco","Tokyo","London"]}
 ```
 
 and then refresh your browser pointing to `http://localhost:8080` to see:
