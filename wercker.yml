@@ -39,7 +39,7 @@ deploy:
       - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        registry: https://registry.hub.docker.com/v2/repositories/
+        registry: https://registry.hub.docker.com/v2
         repository: bluesnake/werckersimpleapp
         ports: "8080"
         cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/app.js”
