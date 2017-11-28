@@ -27,7 +27,7 @@ deploy:
           registry: https://registry.hub.docker.com/v2
           repository: bluesnake/werckersimpleapp
           ports: "8080"
-          cmd: npm start
+          cmd: node app.js
       - add-ssh-key:
           keyname: DIGITALOCEAN
       - add-to-known_hosts:
