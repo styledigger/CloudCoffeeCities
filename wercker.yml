@@ -28,18 +28,39 @@ build:
         code: |
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
-
 # Deployment to DigitalOcean
 deploy:
     steps:
       - npm-install
       - script:
-        name: install supervisor
-        code: npm install -g supervisor
+          name: install supervisor
+          code: npm install -g supervisor
       - internal/docker-push:
-        username: $DOCKER_USERNAME
-        password: $DOCKER_PASSWORD
-        registry: https://registry.hub.docker.com/v2
-        repository: bluesnake/werckersimpleapp
-        ports: "8080"
-        cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/app.js”
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+          registry: https://registry.hub.docker.com/v2
+          repository: bluesnake/werckersimpleapp
+          ports: "8080"
+          cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/app.js”
+      - add-ssh-key:
+          keyname: DIGITALOCEAN
+      - add-to-known_hosts:
+          hostname: 159.89.7.109
+      - script:
+          name: pull latest image
+          code: ssh root@159.89.7.109 docker pull bluesnake/werckersimpleapp:latest
+      - script:
+          name: stop running container
+          code: ssh root@159.89.7.109 docker stop <app-name> || echo ‘failed to stop running container’
+      - script:
+          name: remove stopped container
+          code: ssh root@159.89.7.109 docker rm <app-name> || echo ‘failed to remove stopped container’
+      - script:
+          name: remove image behind stopped container
+          code: ssh root@159.89.7.109 docker rmi bluesnake/werckersimpleapp:current || echo ‘failed to remove image behind stopped container’
+      - script:
+          name: tag newly pulled image
+          code: ssh root@159.89.7.109 docker tag bluesnake/werckersimpleapp:latest bluesnake/werckersimpleapp:current
+      - script:
+          name: run new container
+          code: ssh root@159.89.7.109 docker run -d -p 8080:8080 --name werckersimpleapp bluesnake/werckersimpleapp:current
