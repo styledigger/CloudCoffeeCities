@@ -6,7 +6,7 @@ A sample application in Javascript on NodeJS for Wercker.
 
 This application uses the `node` container obtained from the [Docker Hub](https://hub.docker.com/_/node/)
 
-## Setup
+## Setup.
 Clone this repo and cd into the directory:
 
 ```
