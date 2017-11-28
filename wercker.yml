@@ -3,13 +3,6 @@ box:
   ports: 
     - "8080"
     
-dev:
-  steps:
-    - npm-install
-    - internal/watch:
-        code: node app.js
-        reload: true
-
 # Build definition
 build:
   # The steps that will be executed on build
@@ -21,13 +14,6 @@ build:
     # A step that executes `npm test` command
     - npm-test
 
-    # A custom script step, name value is used in the UI
-    # and the code value contains the command that get executed
-    - script:
-        name: echo nodejs information
-        code: |
-          echo "node version $(node -v) running"
-          echo "npm version $(npm -v) running"
 # Deployment to DigitalOcean
 deploy:
     steps:
@@ -41,7 +27,7 @@ deploy:
           registry: https://registry.hub.docker.com/v2
           repository: bluesnake/werckersimpleapp
           ports: "8080"
-          cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/app.js”
+          cmd: npm start
       - add-ssh-key:
           keyname: DIGITALOCEAN
       - add-to-known_hosts:
