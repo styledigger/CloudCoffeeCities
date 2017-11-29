@@ -37,22 +37,22 @@ deploy:
       - add-ssh-key:
           keyname: DIGITALOCEAN
       - add-to-known_hosts:
-          hostname: 159.89.7.109
+          hostname: $DIGITALOCEAN_IP
       - script:
           name: pull latest image
-          code: ssh root@159.89.7.109 docker pull bluesnake/werckersimpleapp:latest
+          code: ssh root@$DIGITALOCEAN_IP docker pull bluesnake/werckersimpleapp:latest
       - script:
           name: stop running container
-          code: ssh root@159.89.7.109 docker stop werckersimpleapp || echo ‘failed to stop running container’
+          code: ssh root@$DIGITALOCEAN_IP docker stop werckersimpleapp || echo ‘failed to stop running container’
       - script:
           name: remove stopped container
-          code: ssh root@159.89.7.109 docker rm werckersimpleapp || echo ‘failed to remove stopped container’
+          code: ssh root@$DIGITALOCEAN_IP docker rm werckersimpleapp || echo ‘failed to remove stopped container’
       - script:
           name: remove image behind stopped container
-          code: ssh root@159.89.7.109 docker rmi bluesnake/werckersimpleapp:current || echo ‘failed to remove image behind stopped container’
+          code: ssh root@$DIGITALOCEAN_IP docker rmi bluesnake/werckersimpleapp:current || echo ‘failed to remove image behind stopped container’
       - script:
           name: tag newly pulled image
-          code: ssh root@159.89.7.109 docker tag bluesnake/werckersimpleapp:latest bluesnake/werckersimpleapp:current
+          code: ssh root@$DIGITALOCEAN_IP docker tag bluesnake/werckersimpleapp:latest bluesnake/werckersimpleapp:current
       - script:
           name: run new container
-          code: ssh root@159.89.7.109 docker run -d -p 8080:8080 --name werckersimpleapp bluesnake/werckersimpleapp:current
+          code: ssh root@$DIGITALOCEAN_IP docker run -d -p 8080:8080 --name werckersimpleapp bluesnake/werckersimpleapp:current
