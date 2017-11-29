@@ -3,19 +3,20 @@ box:
   ports: 
     - "8080"
     
-# Build definition
+# Build application
 build:
-  # The steps that will be executed on build
+  steps:
+    - npm-install
+
+# Test application using Mocha
+test:
   steps:
     - script:
         code: export NODE_ENV='testing'
-    # A step that executes `npm install` command
-    - npm-install
-    # A step that executes `npm test` command
     - npm-test
 
-# Deployment to DigitalOcean
-deploy:
+# Push to DockerHub
+push:
     steps:
       - npm-install
       - script:
@@ -29,6 +30,10 @@ deploy:
           ports: "8080"
           working-dir: /pipeline/source
           cmd: node app.js
+
+# Deployment to DigitalOcean
+deploy:
+    steps:
       - add-ssh-key:
           keyname: DIGITALOCEAN
       - add-to-known_hosts:
