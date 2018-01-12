@@ -31,20 +31,20 @@ deployDO:
           hostname: $DIGITALOCEAN_IP
       - script:
           name: pull latest image
-          code: ssh root@$DIGITALOCEAN_IP docker pull bluesnake/cloudcoffeecities:latest
+          code: ssh marian@$DIGITALOCEAN_IP docker pull bluesnake/cloudcoffeecities:latest
       - script:
           name: stop running container
-          code: ssh root@$DIGITALOCEAN_IP docker stop cloudcoffeecities || echo ‘failed to stop running container’
+          code: ssh marian@$DIGITALOCEAN_IP docker stop cloudcoffeecities || echo ‘failed to stop running container’
       - script:
           name: remove stopped container
-          code: ssh root@$DIGITALOCEAN_IP docker rm cloudcoffeecities || echo ‘failed to remove stopped container’
+          code: ssh marian@$DIGITALOCEAN_IP docker rm cloudcoffeecities || echo ‘failed to remove stopped container’
       - script:
           name: remove image behind stopped container
-          code: ssh root@$DIGITALOCEAN_IP docker rmi bluesnake/cloudcoffeecities:current || echo ‘failed to remove image behind stopped container’
+          code: ssh marian@$DIGITALOCEAN_IP docker rmi bluesnake/cloudcoffeecities:current || echo ‘failed to remove image behind stopped container’
       - script:
           name: tag newly pulled image
-          code: ssh root@$DIGITALOCEAN_IP docker tag bluesnake/cloudcoffeecities:latest bluesnake/cloudcoffeecities:current
+          code: ssh marian@$DIGITALOCEAN_IP docker tag bluesnake/cloudcoffeecities:latest bluesnake/cloudcoffeecities:current
       - script:
           name: run new container
-          code: ssh root@$DIGITALOCEAN_IP docker run -d -p 7000:8080 --name cloudcoffeecities bluesnake/cloudcoffeecities:current
+          code: ssh marian@$DIGITALOCEAN_IP docker run -d -p 7000:8080 --name cloudcoffeecities bluesnake/cloudcoffeecities:current
 
