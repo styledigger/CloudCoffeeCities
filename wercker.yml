@@ -18,5 +18,6 @@ push:
       tag: latest
       repository: $DOCKER_USERNAME/CloudCoffeeCities
       ports: "8080"
+      working-dir: /pipeline/source
       cmd: npm start
       registry: https://hub.docker.com
