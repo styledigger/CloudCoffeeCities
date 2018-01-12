@@ -9,7 +9,7 @@ test:
   steps:
     - npm-test
 
-# Push to DockerHub
+# Push to Docker Hub
 push:
   steps:
     - internal/docker-push:
