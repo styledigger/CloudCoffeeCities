@@ -2,7 +2,6 @@ box: node
 
 build:
   steps:
-    # A step that executes `npm install` command
     - npm-install
 
 # Test application using Mocha
