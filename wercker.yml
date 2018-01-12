@@ -19,5 +19,5 @@ push:
       repository: $DOCKER_USERNAME/CloudCoffeeCities
       ports: "8080"
       working-dir: /pipeline/source
-      cmd: npm start
+      cmd: node app.js
       registry: https://hub.docker.com
