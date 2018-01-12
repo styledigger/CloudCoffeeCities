@@ -32,7 +32,7 @@ push:
           cmd: node app.js
 
 # Deployment to DigitalOcean
-deploy:
+deployDO:
     steps:
       - add-ssh-key:
           keyname: DIGITALOCEAN
@@ -56,3 +56,12 @@ deploy:
       - script:
           name: run new container
           code: ssh root@$DIGITALOCEAN_IP docker run -d -p 8080:8080 --name werckersimpleapp bluesnake/werckersimpleapp:current
+
+#Deploy to OCCS
+deployDO:
+    steps:
+      - script:
+      name: redeploy-OCCS
+      code: |
+            echo 'occs webhook enabled'
+            curl -k -H "Content-Type: application/json" -X POST $OCCS_WEBHOOK
