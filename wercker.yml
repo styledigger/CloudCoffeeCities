@@ -58,7 +58,7 @@ deployDO:
           code: ssh root@$DIGITALOCEAN_IP docker run -d -p 8080:8080 --name werckersimpleapp bluesnake/werckersimpleapp:current
 
 #Deploy to OCCS
-deployDO:
+deployOC:
     steps:
       - script:
       name: redeploy-OCCS
