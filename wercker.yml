@@ -9,3 +9,15 @@ test:
   steps:
     - npm-test
 
+# Push to Docker Hub
+push:
+  steps:
+    - internal/docker-push:
+      username: $DOCKER_USERNAME
+      password: $DOCKER_PASSWORD
+      tag: latest
+      repository: $DOCKER_USERNAME/CloudCoffeeCities
+      ports: "8080"
+      working-dir: /pipeline/source
+      cmd: node app.js
+      registry: https://hub.docker.com
