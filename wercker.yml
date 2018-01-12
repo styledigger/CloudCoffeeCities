@@ -48,3 +48,11 @@ deployDO:
           name: run new container
           code: ssh marian@$DIGITALOCEAN_IP docker run -d -p 7000:8080 --name cloudcoffeecities bluesnake/cloudcoffeecities:current
 
+# Deployment to DigitalOcean
+deployOC:
+    steps:
+      - script:
+        name: redeploy-OCCS
+        code: |
+              echo 'occs webhook enabled'
+              curl -k -H "Content-Type: application/json" -X POST $OCCS_WEBHOOK
