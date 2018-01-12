@@ -9,3 +9,14 @@ test:
   steps:
     - npm-test
 
+# Push to DockerHub
+push:
+  steps:
+    - internal/docker-push:
+      username: $DOCKER_USERNAME
+      password: $DOCKER_PASSWORD
+      tag: latest
+      repository: $DOCKER_USERNAME/CloudCoffeeCities
+      ports: "8080"
+      cmd: npm start
+      registry: https://hub.docker.com
