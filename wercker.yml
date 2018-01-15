@@ -1,0 +1,10 @@
+box: node
+
+build:
+  steps:
+    - npm-install
+
+# Test application using Mocha
+test:
+  steps:
+    - npm-test
