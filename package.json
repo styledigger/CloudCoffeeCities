@@ -10,9 +10,6 @@
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
-    "start": "app.js",
-    "build": "npm install",
-    "run": "node app.js"
-
+    "start": "app.js"
   }
 }
