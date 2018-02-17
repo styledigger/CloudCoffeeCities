@@ -6,12 +6,13 @@
   },
   "dependencies": {
     "express": "3.x",
-    "nodeunit": "0.7.4",
-    "supertest": "0.4.0",
     "mocha": "1.6.0"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
-    "start": "app.js"
+    "start": "app.js",
+    "build": "npm install",
+    "run": "node app.js"
+
   }
 }
