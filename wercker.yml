@@ -39,6 +39,7 @@ deploy-to-k8s:
         token: $KUBERNETES_TOKEN
         insecure-skip-tls-verify: true
         command: apply -f $WERCKER_ROOT/kubernetes-namespace.yml
+    
     - script:
         name: wait to create namespace
         code: sleep 10
