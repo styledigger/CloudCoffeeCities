@@ -16,43 +16,61 @@ push:
       username: $DOCKER_USERNAME
       password: $DOCKER_PASSWORD
       tag: latest
-      repository: $DOCKER_USERNAME/CloudCoffeeCities
+      repository: $DOCKER_USERNAME/nodecities
       ports: "8080"
       working-dir: /pipeline/source
       cmd: node app.js
       registry: https://hub.docker.com
       
-# Deployment to DigitalOcean
-deployDO:
-    steps:
-      - add-ssh-key:
-          keyname: DIGITALOCEAN
-      - add-to-known_hosts:
-          hostname: $DIGITALOCEAN_IP
-      - script:
-          name: pull latest image
-          code: ssh marian@$DIGITALOCEAN_IP docker pull bluesnake/cloudcoffeecities:latest
-      - script:
-          name: stop running container
-          code: ssh marian@$DIGITALOCEAN_IP docker stop cloudcoffeecities || echo ‘failed to stop running container’
-      - script:
-          name: remove stopped container
-          code: ssh marian@$DIGITALOCEAN_IP docker rm cloudcoffeecities || echo ‘failed to remove stopped container’
-      - script:
-          name: remove image behind stopped container
-          code: ssh marian@$DIGITALOCEAN_IP docker rmi bluesnake/cloudcoffeecities:current || echo ‘failed to remove image behind stopped container’
-      - script:
-          name: tag newly pulled image
-          code: ssh marian@$DIGITALOCEAN_IP docker tag bluesnake/cloudcoffeecities:latest bluesnake/cloudcoffeecities:current
-      - script:
-          name: run new container
-          code: ssh marian@$DIGITALOCEAN_IP docker run -d -p 7000:8080 --name cloudcoffeecities bluesnake/cloudcoffeecities:current
+deploy-to-k8s:
+  box:
+        id: alpine
+        cmd: /bin/sh
+  steps:
+    - bash-template
+    
+    - script:
+        name: "Visualise Kubernetes config"
+        code: cat kubernetes-deployment.ym
 
-# Deployment to DigitalOcean
-deployOC:
-    steps:
-      - script:
-        name: redeploy-OCCS
-        code: |
-              echo 'occs webhook enabled'
-              curl -k -H "Content-Type: application/json" -X POST $OCCS_WEBHOOK
+    - kubectl:
+        name: create namespace    
+        server: $KUBERNETES_MASTER
+        token: $KUBERNETES_TOKEN
+        insecure-skip-tls-verify: true
+        command: apply -f $WERCKER_ROOT/kubernetes-namespace.yml
+        - script:
+        name: wait to create namespace
+        code: sleep 10
+ 
+#    - kubectl:
+#        name: create OCR secret
+#        server: $KUBERNETES_MASTER
+#        token: $KUBERNETES_TOKEN
+#        insecure-skip-tls-verify: true
+#        command: create secret docker-registry wrelease --docker-server=wcr.io --docker-username=$WERCKER_APPLICATION_OWNER_NAME --docker-password=$KUBERNETES_TOKEN --docker-email=${WERCKER_APPLICATION_OWNER_NAME}@mail.com --namespace=$WERCKER_APPLICATION_OWNER_NAME; echo 'secret step'
+    
+    - kubectl:
+        name: create deplyoment
+        server: $KUBERNETES_MASTER
+        token: $KUBERNETES_TOKEN
+        insecure-skip-tls-verify: true
+        command: apply -f $WERCKER_ROOT/kubernetes-deployment.yml --namespace=$WERCKER_APPLICATION_OWNER_NAME
+
+    - script:
+        name: "Visualise Ingress config"
+        code: cat ingress.yml
+
+    - kubectl:
+        name: create Ingress configuration
+        server: $KUBERNETES_MASTER
+        token: $KUBERNETES_TOKEN
+        insecure-skip-tls-verify: true
+        command: apply -f $WERCKER_ROOT/ingress.yml --namespace=$WERCKER_APPLICATION_OWNER_NAME
+        
+    - kubectl:
+        name: get LoadBalancer public IP address
+        server: $KUBERNETES_MASTER
+        token: $KUBERNETES_TOKEN
+        insecure-skip-tls-verify: true
+        command: get svc -o jsonpath='{.items[*].status.loadBalancer.ingress[*].ip}' --all-namespaces
