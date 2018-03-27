@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: nodecities
-        image: $DOCKER_USERNAME/nodecities:current
+        image: $DOCKER_USERNAME/nodecities
         ports:
         - name: nodecities
           containerPort: 8080
