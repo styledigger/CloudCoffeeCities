@@ -19,6 +19,7 @@ spec:
       containers:
       - name: nodecities
         image: $DOCKER_USERNAME/nodecities
+        imagePullPolicy: Always
         ports:
         - name: nodecities
           containerPort: 8080
