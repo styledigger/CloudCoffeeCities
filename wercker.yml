@@ -31,7 +31,7 @@ deploy-to-k8s:
     
     - script:
         name: "Visualise Kubernetes config"
-        code: cat kubernetes-deployment.yml
+        code: cat kubernetes-namespace.yml
 
     - kubectl:
         name: create namespace    
