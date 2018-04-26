@@ -20,7 +20,7 @@ push:
       ports: "8080"
       working-dir: /pipeline/source
       cmd: node app.js
-      registry: https://hub.docker.com
+#      registry: https://hub.docker.com
       
 deploy-to-k8s:
   box:
